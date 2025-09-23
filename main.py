@@ -1,4 +1,5 @@
 import discord
+import os
 from typing import Optional
 import nest_asyncio
 import asyncio
@@ -103,8 +104,10 @@ async def comando_angelo(interaction: discord.Interaction):
     await interaction.response.send_message("angelo")
 
 # --- Inicia o Bot ---
+TOKEN = os.environ['TOKEN']
+
 nest_asyncio.apply()
 async def main():
-    await client.start(TOKEN)
+    await client.run(TOKEN)
 
 asyncio.run(main())
