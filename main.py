@@ -1,4 +1,5 @@
 import discord
+from discord import app_commands
 import os
 from typing import Optional
 import nest_asyncio
@@ -38,11 +39,11 @@ mapa_emojis = {
 }
 
 # --- Definição do Comando ---
-@tree.command(name="nome", description="Muda seu apelido de acordo com as normas da firma")
+@tree.command(name="nome", description="Muda seu nome de acordo com as normas da firma")
 async def comando_nome(
     interaction: discord.Interaction,
     nome: str,
-    cabra: Optional[discord.Member] = None
+    pessoa: Optional[discord.Member] = None
 ):
     # Normaliza o texto
     apelido_normalizado = "".join(
@@ -68,7 +69,7 @@ async def comando_nome(
 
     # Decide quem vai ter o apelido alterado
     membro = interaction.user
-    if cabra:  
+    if pessoa:
         # se tentou passar alguém, checa se é admin
         if not interaction.user.guild_permissions.administrator:
             await interaction.response.send_message(
@@ -76,15 +77,15 @@ async def comando_nome(
                 ephemeral=True
             )
             return
-        membro = cabra
+        membro = pessoa
 
     # Tenta aplicar
     try:
         await membro.edit(nick=apelido_emojis)
         if membro == interaction.user:
-            msg = f"✅ Nome alterado para `{apelido_emojis}`"
+            msg = f"✅ Nome mudado: `{apelido_emojis}`"
         else:
-            msg = f"✅ Nome de {membro.mention} alterado para `{apelido_emojis}`"
+            msg = f"✅ Nome de {membro.mention} mudado: `{apelido_emojis}`"
 
         await interaction.response.send_message(msg, ephemeral=True)
 
@@ -99,9 +100,16 @@ async def comando_nome(
             ephemeral=True
         )
 
-@tree.command(name="angelo", description="angelo")
-async def comando_angelo(interaction: discord.Interaction):
-    await interaction.response.send_message("angelo")
+@tree.command(name="angelo", description="Permite que você cite o nome do mestre")
+@app_commands.describe(texto="Coloque '...' pra poder falar 'angelo'")
+async def comando_angelo(interaction: discord.Interaction, texto: Optional[str]):
+    texto = texto or ""
+
+    if "..." in texto:
+        texto = texto.replace("...", "angelo")
+
+    resposta = texto.strip() or "angelo"
+    await interaction.response.send_message(resposta)
 
 # --- Inicia o Bot ---
 TOKEN = os.environ['TOKEN']
