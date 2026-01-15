@@ -5,7 +5,8 @@
 > **texto:** argumento opcional
 
 - Comando que simplesmente diz `angelo` se alguém mandar sem argumento extra🔥
-- Caso tenha um texto, ele substiui todos os `...` pra `angelo`, deixando assim o membro plebeu mencionar o nome do MESTRE!!!!!!
+- Caso tenha um texto, ele simplesmente repete o que você escreveu, deixando assim o membro plebeu mencionar o nome do mestre O QUANTO QUISER!!!!!!
+- Depois disso, obviamente, o cara toma um castigo de acordo com a quantidade de `angelos` escritos
 
 ### /nome [nome] {pessoa}
 > **nome:** argumento obrigatório
