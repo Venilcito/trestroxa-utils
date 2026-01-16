@@ -16,7 +16,7 @@ class TresTroxaUtils(discord.Client):
 
 bot = TresTroxaUtils()
 
-# detector de ANGELO!!!!!
+# detector de ANGELOS!!!!!
 substituicoes = {
     'a': '[aᴀ4A@]',
     'n': '[nNɴ]',
