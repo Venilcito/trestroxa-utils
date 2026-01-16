@@ -33,3 +33,11 @@
 - Comando pra apagar **todas** as mensagens partindo de uma inicial *(limite de 100 mensagens por vez)*
 - Tem como apagar as mensagens de uma **única pessoa**
 - Só quem tem permissão de **Administrador** pode usar esse comando!
+
+## Features:
+### Detector de angelos
+> Código carinhosamente roubado do esquilo
+
+- Analisa **toda mensagem** enviada no servidor
+- Procura as letras `a`, `n`, `g`, `e`, `l` e `o` na mensagem, não importa quanta coisa tenha entre elas
+- Caso encontre, **cala o herege** por 1 minuto

@@ -1,10 +1,13 @@
 import os
+import re
 import sys
+import datetime
 import discord
 from discord import app_commands
 
 intents = discord.Intents.default()
 intents.members = True
+intents.message_content = True
 
 class TresTroxaUtils(discord.Client):
     def __init__(self):
@@ -13,6 +16,97 @@ class TresTroxaUtils(discord.Client):
 
 bot = TresTroxaUtils()
 
+# detector de ANGELO!!!!!
+substituicoes = {
+    'a': '[aᴀ4A@]',
+    'n': '[nNɴ]',
+    'g': '[Gɢ]',
+    'e': '[E3ᴇ]',
+    'l': '[ʟL]',
+    'o': '[o0ᴏO]'
+}
+
+def cria_regex_com_grupos(palavra: str) -> str:
+    regex = ''
+    for letra in palavra.lower():
+        grupo = substituicoes.get(letra, re.escape(letra))
+        regex += '(' + grupo + ')'
+        regex += '.*?'
+    return regex
+
+padrao_angelo = re.compile(cria_regex_com_grupos("angelo"), re.IGNORECASE)
+
+def marca_angelo(texto: str) -> str | None:
+    regex = ''
+    for letra in 'angelo':
+        regex += '(' + substituicoes[letra] + ')'
+        regex += '.*?'
+    padrao = re.compile(regex, re.IGNORECASE)
+
+    match = padrao.search(texto)
+    if not match:
+        return None
+
+    last_index = 0
+    grupos = list(match.groups())
+
+    resultado = '"'
+    for grupo in grupos:
+        busca = grupo.lower()
+        idx = texto.lower().find(busca, last_index)
+
+        if idx == -1:
+            idx = last_index
+
+        resultado += texto[last_index:idx]
+
+        if 0 <= idx < len(texto):
+            resultado += f' **{texto[idx].upper()}** '
+            last_index = idx + 1
+        else:
+            last_index = idx
+
+    rest = texto[last_index:last_index + 30]
+    if last_index + 30 < len(texto):
+        resultado += f'{rest}..."'
+    else:
+        resultado += f'{rest}"'
+    return resultado
+
+@bot.event
+async def on_message(message: discord.Message):
+    if message.author == bot.user:
+        return
+
+    # print("mensagem recebida!")
+    content = message.content or ""
+
+    try:
+        match_angelo = padrao_angelo.search(content)
+    except Exception:
+        return
+
+    if match_angelo:
+        result = marca_angelo(content) or (content[:60] + ('...' if len(content) > 60 else ''))
+
+        try:
+            await message.reply(f'Pera aí... **ANGELO????**\n'
+                                f'> {result} \n'
+                                f'-# COMO OUSA citar o nome do mestre EM VÃO?! **Tá de castigo!**')
+        except Exception as e:
+            pass
+
+        if message.guild:
+            membro = message.author
+            duracao_segundos = 60
+
+            try:
+                duracao = datetime.timedelta(seconds=duracao_segundos)
+                await membro.timeout(duracao, reason="angelo")
+            except Exception as e:
+                pass
+
+# Iniciando o bot real oficial
 @bot.event
 async def on_ready():
     print(f"Logado como: {bot.user}")
