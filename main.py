@@ -18,12 +18,12 @@ bot = TresTroxaUtils()
 
 # detector de ANGELOS!!!!!
 substituicoes = {
-    'a': '[aᴀ4A@]',
-    'n': '[nNɴ]',
-    'g': '[Gɢ]',
-    'e': '[E3ᴇ]',
-    'l': '[ʟL]',
-    'o': '[o0ᴏO]'
+    'a': '[ᴀ4AâÂáÁàÀ🅰🅰️]',
+    'n': '[NɴŋñÑ🅽]',
+    'g': '[Gɢ🅶]',
+    'e': '[E3ᴇéÉèÈêÊ🅴]',
+    'l': '[ʟLI🅻]',
+    'o': '[ᴏO0ôÔõÕóÓòÒº🅾⭕0️⃣]'
 }
 
 def cria_regex_com_grupos(palavra: str) -> str:
@@ -75,7 +75,7 @@ def marca_angelo(texto: str) -> str | None:
 
 @bot.event
 async def on_message(message: discord.Message):
-    if message.author == bot.user:
+    if message.author.bot:
         return
 
     # print("mensagem recebida!")
