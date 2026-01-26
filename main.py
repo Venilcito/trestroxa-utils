@@ -18,12 +18,12 @@ bot = TresTroxaUtils()
 
 # detector de ANGELOS!!!!!
 substituicoes = {
-    'a': '[ᴀ4AâÂáÁàÀ🅰🅰️]',
-    'n': '[NɴŋñÑ🅽]',
-    'g': '[Gɢ🅶]',
-    'e': '[E3ᴇéÉèÈêÊ🅴]',
-    'l': '[ʟLI🅻]',
-    'o': '[ᴏO0ôÔõÕóÓòÒº🅾⭕0️⃣]'
+    'a': '[aàáâãäåāăąǎǟǡǻȁȃȧᴀαа🅰️4@∆🅰]',
+    'n': '[nñńņňŋṅṇṉṋɴηп🅽]',
+    'g': '[gĝğġģǧǵɠɢɡ🅶]',
+    'e': '[eèéêëēĕėęěȅȇẹẻẽếềểễệᴇ3€🅴]',
+    'l': '[lĺļľŀłɫɬɭʟ|1!I🅻]',
+    'o': '[oòóôõöøōŏőơǒǫǭȍȏɵᴏοо0⭕🅾️0️⃣🅾]'
 }
 
 def cria_regex_com_grupos(palavra: str) -> str:
@@ -34,14 +34,14 @@ def cria_regex_com_grupos(palavra: str) -> str:
         regex += '.*?'
     return regex
 
-padrao_angelo = re.compile(cria_regex_com_grupos("angelo"), re.IGNORECASE)
+padrao_angelo = re.compile(cria_regex_com_grupos("angelo"), re.IGNORECASE | re.DOTALL)
 
 def marca_angelo(texto: str) -> str | None:
     regex = ''
     for letra in 'angelo':
         regex += '(' + substituicoes[letra] + ')'
         regex += '.*?'
-    padrao = re.compile(regex, re.IGNORECASE)
+    padrao = re.compile(regex, re.IGNORECASE | re.DOTALL)
 
     match = padrao.search(texto)
     if not match:
