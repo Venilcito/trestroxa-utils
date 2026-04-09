@@ -2,6 +2,7 @@ from typing import Optional
 import discord
 from discord import app_commands
 import datetime
+from database import load_imunes
 
 def setup(bot):
     @bot.tree.command(name="angelo", description="Permite que você cite o nome do mestre")
@@ -22,9 +23,10 @@ def setup(bot):
             minutos = angelos
         
         membro = interaction.user
+        imunes = load_imunes()
         
         try:
-            if minutos > 0:
+            if minutos > 0 and membro.id not in imunes:
                 duracao = datetime.timedelta(minutes=minutos)
                 await membro.timeout(duracao, reason="angelo")
             

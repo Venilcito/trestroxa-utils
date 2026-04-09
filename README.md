@@ -42,6 +42,14 @@
 - Existe **20% de chance** de ser censurado pela quantidade de minutos escolhida
 - Caso você use o comando **10 vezes em um minuto**, é colocado em tratamento para vício em apostas
 
+### /imunidade [pessoa]
+> **pessoa:** argumento obrigatório
+
+- Comando para **adicionar / remover** alguém da lista de imunes à maldição do mestre
+- Imunes podem usar o comando `/angelo` sem levar timeout
+- Imunes são ignorados pelo **Detector de angelos**
+- Só quem tem permissão de **Administrador** pode usar esse comando!
+
 ## Features:
 ### Detector de angelos
 > Código carinhosamente roubado do esquilo

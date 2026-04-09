@@ -4,6 +4,7 @@ import sys
 import datetime
 import discord
 from discord import app_commands
+from database import load_imunes
 
 intents = discord.Intents.default()
 intents.members = True
@@ -21,7 +22,7 @@ substituicoes = {
     'a': '[aàáâãäåāăąǎǟǡǻȁȃȧᴀαа🅰️4@∆🅰]',
     'n': '[nñńņňŋṅṇṉṋɴηп🅽]',
     'g': '[gĝğġģǧǵɠɢɡ🅶]',
-    'e': '[eèéêëēĕėęěȅȇẹẻẽếềểễệᴇ3€🅴]',
+    'e': '[eèéêëēĕėęěȅȇẹẻẽếềểễệᴇ3€е🅴]',
     'l': '[lĺļľŀłɫɬɭʟ|1!I🅻]',
     'o': '[oòóôõöøōŏőơǒǫǭȍȏɵᴏοо0⭕🅾️0️⃣🅾]'
 }
@@ -75,7 +76,8 @@ def marca_angelo(texto: str) -> str | None:
 
 @bot.event
 async def on_message(message: discord.Message):
-    if message.author.bot:
+    imunes = load_imunes()
+    if message.author.bot or message.author.id in imunes:
         return
 
     # print("mensagem recebida!")
