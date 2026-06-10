@@ -4,7 +4,7 @@ import sys
 import datetime
 import discord
 from discord import app_commands
-from database import load_imunes
+import troxa
 
 intents = discord.Intents.default()
 intents.members = True
@@ -18,70 +18,15 @@ class TresTroxaUtils(discord.Client):
 bot = TresTroxaUtils()
 
 # detector de ANGELOS!!!!!
-substituicoes = {
-    'a': '[aàáâãäåāăąǎǟǡǻȁȃȧᴀαа🅰️4@∆🅰]',
-    'n': '[nñńņňŋṅṇṉṋɴηп🅽]',
-    'g': '[gĝğġģǧǵɠɢɡ🅶]',
-    'e': '[eèéêëēĕėęěȅȇẹẻẽếềểễệᴇ3€е🅴]',
-    'l': '[lĺļľŀłɫɬɭʟ|1!I🅻]',
-    'o': '[oòóôõöøōŏőơǒǫǭȍȏɵᴏοо0⭕🅾️0️⃣🅾]'
-}
-
-def cria_regex_com_grupos(palavra: str) -> str:
-    regex = ''
-    for letra in palavra.lower():
-        grupo = substituicoes.get(letra, re.escape(letra))
-        regex += '(' + grupo + ')'
-        regex += '.*?'
-    return regex
-
-padrao_angelo = re.compile(cria_regex_com_grupos("angelo"), re.IGNORECASE | re.DOTALL)
-
-def marca_angelo(texto: str) -> str | None:
-    regex = ''
-    for letra in 'angelo':
-        regex += '(' + substituicoes[letra] + ')'
-        regex += '.*?'
-    padrao = re.compile(regex, re.IGNORECASE | re.DOTALL)
-
-    match = padrao.search(texto)
-    if not match:
-        return None
-
-    last_index = 0
-    grupos = list(match.groups())
-
-    resultado = '"'
-    for grupo in grupos:
-        busca = grupo.lower()
-        idx = texto.lower().find(busca, last_index)
-
-        if idx == -1:
-            idx = last_index
-
-        resultado += texto[last_index:idx]
-
-        if 0 <= idx < len(texto):
-            resultado += f' **{texto[idx].upper()}** '
-            last_index = idx + 1
-        else:
-            last_index = idx
-
-    rest = texto[last_index:last_index + 30]
-    if last_index + 30 < len(texto):
-        resultado += f'{rest}..."'
-    else:
-        resultado += f'{rest}"'
-    return resultado
-
 @bot.event
 async def on_message(message: discord.Message):
-    imunes = load_imunes()
+    imunes = troxa.load_imunes()
     if message.author.bot or message.author.id in imunes:
         return
 
     # print("mensagem recebida!")
     content = message.content or ""
+    padrao_angelo = re.compile(troxa.cria_regex_com_grupos("angelo"), re.IGNORECASE | re.DOTALL)
 
     try:
         match_angelo = padrao_angelo.search(content)
@@ -89,7 +34,7 @@ async def on_message(message: discord.Message):
         return
 
     if match_angelo:
-        result = marca_angelo(content) or (content[:60] + ('...' if len(content) > 60 else ''))
+        result = troxa.marca_angelo(content) or (content[:60] + ('...' if len(content) > 60 else ''))
 
         try:
             await message.reply(f'Pera aí... **ANGELO????**\n'

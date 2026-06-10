@@ -50,6 +50,15 @@
 - Imunes são ignorados pelo **Detector de angelos**
 - Só quem tem permissão de **Administrador** pode usar esse comando!
 
+### /letra [caractere] [letra]
+> Grupo de comandos com `add` e `rem`
+> **caractere:** argumento obrigatório
+> **letra:** argumento obrigatório
+
+- Comandos para **adicionar / remover** caracteres considerados no regex do **ângelo**
+- Só quem tem permissão de **Administrador** pode usar esse comando!
+
+
 ## Features:
 ### Detector de angelos
 > Código carinhosamente roubado do esquilo
