@@ -52,7 +52,9 @@
 
 ### /letra [caractere] [letra]
 > Grupo de comandos com `add` e `rem`
+
 > **caractere:** argumento obrigatório
+
 > **letra:** argumento obrigatório
 
 - Comandos para **adicionar / remover** caracteres considerados no regex do **ângelo**

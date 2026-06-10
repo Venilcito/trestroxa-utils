@@ -4,6 +4,7 @@ import sys
 import datetime
 import discord
 from discord import app_commands
+from dotenv import load_dotenv
 import troxa
 
 intents = discord.Intents.default()
@@ -79,5 +80,6 @@ def load_cogs():
 
 if __name__ == "__main__":
     load_cogs()
+    load_dotenv()
     TOKEN = os.environ['TOKEN']
     bot.run(TOKEN)
