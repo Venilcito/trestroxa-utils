@@ -60,6 +60,14 @@
 - Comandos para **adicionar / remover** caracteres considerados no regex do **ângelo**
 - Só quem tem permissão de **Administrador** pode usar esse comando!
 
+### /cor [cor] {pessoa}
+> **cor:** argumento obrigatório
+
+> **pessoa:** argumento opcional
+
+- Comando pra **mudar a cor do seu nome**, desde que ela esteja na lista de cores do servidor
+- Caso seja um admin, você pode incluir `pessoa` pra mudar a cor de **outro cabra**
+
 
 ## Features:
 ### Detector de angelos
