@@ -1,8 +1,9 @@
 import json
 import os
 import re
+import datetime
 
-# imunes ao angelo
+# ---------- imunes ----------
 IMUNES_PATH = 'data/imunes.json'
 
 def load_imunes():
@@ -18,7 +19,7 @@ def save_imunes(imunes):
         json.dump(imunes, f)
 
 
-# letras do angelo
+# ---------- letras ----------
 SUBST_PATH = 'data/substituicoes.json'
 
 def load_substituicoes():
@@ -34,12 +35,12 @@ def save_substituicoes(dados):
         json.dump(dados, f, ensure_ascii=False, indent=4)
 
 
-# DETECTOR DE ANGELOS!!!!!!
+# ---------- DETECTOR DE ANGELOS!!!!!! ----------
 def cria_regex_com_grupos(palavra: str) -> str:
     substituicoes = load_substituicoes()
     regex = ''
 
-    for letra in palavra.lower():
+    for letra in palavra:
         lista = substituicoes.get(letra)
 
         if not lista:
@@ -63,7 +64,7 @@ def marca_angelo(texto: str) -> str | None:
         grupo = '(?:' + '|'.join(re.escape(x) for x in lista) + ')'
         regex += f'({grupo}).*?'
 
-    padrao = re.compile(regex, re.IGNORECASE | re.DOTALL)
+    padrao = re.compile(regex, re.DOTALL)
     match = padrao.search(texto)
     if not match:
         return None
@@ -73,8 +74,8 @@ def marca_angelo(texto: str) -> str | None:
 
     resultado = '"'
     for grupo in grupos:
-        busca = grupo.lower()
-        idx = texto.lower().find(busca, last_index)
+        busca = grupo
+        idx = texto.find(busca, last_index)
 
         if idx == -1:
             idx = last_index
@@ -93,3 +94,37 @@ def marca_angelo(texto: str) -> str | None:
     else:
         resultado += f'{rest}"'
     return resultado
+
+async def detect_angelo(message):
+    imunes = load_imunes()
+    if message.author.bot or message.author.id in imunes:
+        return
+    
+    # print("mensagem recebida!")
+    content = message.content or ""
+    padrao_angelo = re.compile(cria_regex_com_grupos("angelo"), re.DOTALL)
+    
+    try:
+        match_angelo = padrao_angelo.search(content)
+    except Exception:
+        return
+    
+    if match_angelo:
+        result = marca_angelo(content) or (content[:60] + ('...' if len(content) > 60 else ''))
+        formatado = result.replace('\n', '\n> ')
+
+        try:
+            await message.reply(f'Pera aí... **ANGELO????**\n'
+                                f'> {formatado} \n'
+                                f'-# COMO OUSA citar o nome do mestre EM VÃO?! **Tá de castigo!**')
+        except Exception as e:
+            pass
+
+        if message.guild:
+            membro = message.author
+
+            try:
+                duracao = datetime.timedelta(seconds=60)
+                await membro.timeout(duracao, reason="angelo")
+            except Exception as e:
+                pass
