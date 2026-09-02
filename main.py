@@ -1,11 +1,9 @@
 import os
-import re
 import sys
-import datetime
 import discord
 from discord import app_commands
 from dotenv import load_dotenv
-import troxa
+from troxa import detect_angelo
 
 intents = discord.Intents.default()
 intents.members = True
@@ -18,41 +16,12 @@ class TresTroxaUtils(discord.Client):
 
 bot = TresTroxaUtils()
 
-# detector de ANGELOS!!!!!
+
+# coisas pra fazer quando recebe uma mensagem
 @bot.event
 async def on_message(message: discord.Message):
-    imunes = troxa.load_imunes()
-    if message.author.bot or message.author.id in imunes:
-        return
+    await detect_angelo(message)
 
-    # print("mensagem recebida!")
-    content = message.content or ""
-    padrao_angelo = re.compile(troxa.cria_regex_com_grupos("angelo"), re.IGNORECASE | re.DOTALL)
-
-    try:
-        match_angelo = padrao_angelo.search(content)
-    except Exception:
-        return
-
-    if match_angelo:
-        result = troxa.marca_angelo(content) or (content[:60] + ('...' if len(content) > 60 else ''))
-
-        try:
-            await message.reply(f'Pera aí... **ANGELO????**\n'
-                                f'> {result} \n'
-                                f'-# COMO OUSA citar o nome do mestre EM VÃO?! **Tá de castigo!**')
-        except Exception as e:
-            pass
-
-        if message.guild:
-            membro = message.author
-            duracao_segundos = 60
-
-            try:
-                duracao = datetime.timedelta(seconds=duracao_segundos)
-                await membro.timeout(duracao, reason="angelo")
-            except Exception as e:
-                pass
 
 # Iniciando o bot real oficial
 @bot.event

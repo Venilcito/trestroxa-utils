@@ -9,8 +9,6 @@ def setup(bot):
     @bot.tree.command(name="apostar", description="A casa sempre ganha")
     @app_commands.describe(minutos="Minutos pra apostar")
     async def comando_aposta(interaction: discord.Interaction, minutos: int):
-        # print(f"/aposta acionado por {interaction.user}")
-
         agora = datetime.datetime.now(datetime.timezone.utc)
         iduser = interaction.user.id
 
@@ -29,15 +27,48 @@ def setup(bot):
             await interaction.user.timeout(duracao, reason= "Consumido pelo vício em apostas")
             vicio[iduser].clear()
     
-            await interaction.response.send_message(f"⛔ {interaction.user.mention} foi diagnosticado com **vício em apostas...**\n"
-                                                    f"*Está em estado de recuperação por **1 dia**. Melhoras!*")
+            await interaction.response.send_message(
+                f"⛔ {interaction.user.mention} foi diagnosticado com **vício em apostas...**\n"
+                f"*Está em estado de recuperação por **1 dia**. Melhoras!*"
+            )
             return
 
-
         if random.randint(1, 100) < 20:
-            await interaction.response.send_message(f"🎉 {interaction.user.mention} acabou de ficar {minutos} minutos de castigo! 🎊")
-            duracao = datetime.timedelta(minutes=minutos)
+            MAX_MINUTOS = (28 * 24 * 60) - 5
+            minutos_reais = min(minutos, MAX_MINUTOS)
+            
+            if minutos_reais >= 1440:
+                dias = minutos_reais // 1440
+                resto_minutos = minutos_reais % 1440
+                horas = resto_minutos // 60
+                mins = resto_minutos % 60
+                
+                tempo_str = f"**{dias} dia(s)**"
+                if horas > 0: tempo_str += f", **{horas} hora(s)**"
+                if mins > 0: tempo_str += f" e **{mins} minuto(s)**"
+                
+            elif minutos_reais >= 60:
+                horas = minutos_reais // 60
+                mins = minutos_reais % 60
+                tempo_str = f"**{horas} hora(s)**"
+                if mins > 0: tempo_str += f" e **{mins} minuto(s)**"
+                
+            elif minutos > 0:
+                tempo_str = f"**{minutos_reais} minuto(s)**"
+
+            else:
+                tempo_str = MAX_MINUTOS
+
+            aviso_extra = ""
+            if minutos > MAX_MINUTOS or minutos <= 0:
+                aviso_extra = f"\n\n-# {minutos} minutos? Bonitinho"
+
+            msg = f"🎉 {interaction.user.mention} acabou de ficar {tempo_str} de castigo! 🎊{aviso_extra}"
+            
+            duracao = datetime.timedelta(minutes=minutos_reais)
             await interaction.user.timeout(duracao, reason="Tentou a sorte")
 
         else:
-            await interaction.response.send_message(f"Dessa vez você se safou...")
+            msg = f"Dessa vez você se safou..."
+
+        await interaction.response.send_message(msg)
