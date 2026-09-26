@@ -9,6 +9,10 @@ def setup(bot):
     @bot.tree.command(name="apostar", description="A casa sempre ganha")
     @app_commands.describe(minutos="Minutos pra apostar")
     async def comando_aposta(interaction: discord.Interaction, minutos: int):
+        if interaction.user.guild_permissions.administrator:
+            await interaction.response.send_message("❌ Parceiro, infelizmente você está banido do cassino", ephemeral=True)
+            return
+
         agora = datetime.datetime.now(datetime.timezone.utc)
         iduser = interaction.user.id
 
